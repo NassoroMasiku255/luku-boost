@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.lukuboost.electricityloan.loan.service.LoanServiceTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.483 s -- in com.lukuboost.electricityloan.loan.service.LoanServiceTest

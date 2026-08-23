@@ -1,0 +1,200 @@
+##########################################################################
+# LUKU Boost — Customer API Test Requests
+# Base URL: http://localhost:8080/api/v1/customer
+#
+# Authentication: All requests require X-Client-Id and X-Api-Key headers.
+##########################################################################
+
+@baseUrl = http://localhost:8080/api/v1/customer
+@clientId = lkb_63fbfaba23934a0657019f647f7ca34a
+@apiKey = lkb_key_b6ea7533fdd4aea8590c92950ffd2e2fdf40bcd4082a7f0e7a155cd714b382ec
+@adminToken = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5MTdkMGJmNy00YWQwLTRmNDQtOGU4NC1kNTVhYTQ2NTNlYjEiLCJpc3MiOiJsdWt1Ym9vc3QiLCJ1c2VybmFtZSI6InN1cGVyYWRtaW4iLCJwZXJtaXNzaW9ucyI6WyJDT05GSUdfVklFVyIsIlVTRVJfVklFVyIsIkNPTkZJR19NQU5BR0UiLCJBVURJVF9WSUVXIiwiQ1VTVE9NRVJfTUFOQUdFIiwiVVNFUl9NQU5BR0UiLCJMT0FOX1ZJRVciLCJMT0FOX01BTkFHRSIsIlJFQ09OQ0lMSUFUSU9OX01BTkFHRSIsIkRBU0hCT0FSRF9WSUVXIiwiUkVDT05DSUxJQVRJT05fVklFVyIsIlRSQU5TQUNUSU9OX1ZJRVciLCJDVVNUT01FUl9WSUVXIl0sInR5cGUiOiJBQ0NFU1MiLCJpYXQiOjE3ODY1MTY4NjYsImV4cCI6MTc4NjUxNzc2Nn0.kkG5VFcC8SFadK1S62B6-NxvgzFdLBlEN_w0h4BUww3TCmjUOsgzzOvBiFnxJWIls4tEqZEQh_NDw9EnTD0vpw
+
+
+
+### =====================================================================
+### STEP 1: Check Eligibility
+### Validates phone + meter, returns meter info, loan limit, and service fee %.
+### Save the "applicationRef" from the response — needed for Step 2 & 3.
+### =====================================================================
+# @name checkEligibility
+POST {{baseUrl}}/eligibility/check
+Content-Type: application/json
+X-Client-Id: {{clientId}}
+X-Api-Key: {{apiKey}}
+
+{
+  "phoneNumber": "255712345678",
+  "meterNumber": "12345678901"
+}
+
+
+### =====================================================================
+### STEP 2: Request Loan + OTP
+### Submit borrowed amount. An OTP is sent to the customer's phone.
+### Use the "applicationRef" from Step 1 response.
+### Generate a unique idempotencyKey (UUID) for each request.
+### =====================================================================
+# @name requestLoan
+POST {{baseUrl}}/loans
+Content-Type: application/json
+X-Client-Id: {{clientId}}
+X-Api-Key: {{apiKey}}
+
+{
+  "phoneNumber": "255712345678",
+  "meterNumber": "12345678901",
+  "loanLimit": 25000.00,
+  "borrowedAmount": 15000.00,
+  "applicationRef": "APP-20260812-000672760",
+  "idempotencyKey": "test-idem-key-001"
+}
+
+
+### =====================================================================
+### STEP 3: Verify OTP & Disburse Loan
+### Verifies OTP, purchases electricity token, creates loan.
+### Use the "applicationRef" from Step 1 and the OTP received via SMS.
+### =====================================================================
+# @name verifyOtpAndDisburse
+POST {{baseUrl}}/loans/verify-otp
+Content-Type: application/json
+X-Client-Id: {{clientId}}
+X-Api-Key: {{apiKey}}
+
+{
+  "applicationRef": "REPLACE_WITH_APPLICATION_REF_FROM_STEP_1",
+  "otp": "123456"
+}
+
+
+### =====================================================================
+### GET Loan Details
+### Retrieve loan details by loan reference (from Step 3 response).
+### =====================================================================
+# @name getLoanDetails
+GET {{baseUrl}}/loans/REPLACE_WITH_LOAN_REF
+Content-Type: application/json
+X-Client-Id: {{clientId}}
+X-Api-Key: {{apiKey}}
+
+
+### =====================================================================
+### GET Loan History
+### Get all loans for a customer by phone number.
+### =====================================================================
+# @name getLoanHistory
+GET {{baseUrl}}/loans/history?phoneNumber=255712345678
+Content-Type: application/json
+X-Client-Id: {{clientId}}
+X-Api-Key: {{apiKey}}
+
+
+### =====================================================================
+### Resend OTP (Customer API)
+### Use when OTP expired or customer didn't receive it.
+### Generates a new OTP and sends it to the customer's phone.
+### =====================================================================
+# @name resendOtp
+POST {{baseUrl}}/loans/resend-otp?applicationRef=APP-20260812-000672760
+Content-Type: application/json
+X-Client-Id: {{clientId}}
+X-Api-Key: {{apiKey}}
+
+
+### =====================================================================
+### ERROR TEST: Missing API credentials
+### Should return 401 MISSING_CREDENTIALS
+### =====================================================================
+# @name testMissingCredentials
+POST {{baseUrl}}/eligibility/check
+Content-Type: application/json
+
+{
+  "phoneNumber": "255712345678",
+  "meterNumber": "12345678901"
+}
+
+
+### =====================================================================
+### ERROR TEST: Invalid API key
+### Should return 401 INVALID_API_KEY
+### =====================================================================
+# @name testInvalidApiKey
+POST {{baseUrl}}/eligibility/check
+Content-Type: application/json
+X-Client-Id: {{clientId}}
+X-Api-Key: lkb_key_invalid_key_here
+
+{
+  "phoneNumber": "255712345678",
+  "meterNumber": "12345678901"
+}
+
+
+##########################################################################
+# ADMIN API — For managing API clients and configs
+##########################################################################
+
+@adminBaseUrl = http://localhost:8080/api/v1/admin
+
+
+### =====================================================================
+### Admin Login (get JWT token)
+### Copy the accessToken from the response to use in admin requests below.
+### =====================================================================
+# @name adminLogin
+POST {{adminBaseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "superadmin",
+  "password": "Admin@2026!"
+}
+
+
+### =====================================================================
+### List API Clients
+### =====================================================================
+# @name listApiClients
+GET {{adminBaseUrl}}/api-clients
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+
+### =====================================================================
+### Create API Client
+### =====================================================================
+# @name createApiClient
+POST {{adminBaseUrl}}/api-clients
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "clientName": "lukuboost",
+  "description": "Production mobile app for luku boost",
+  "allowedIps": "",
+  "rateLimitPerMinute": 60
+}
+
+
+### =====================================================================
+### Admin: View OTP for an application
+### Shows the plain OTP, status, expiry, and attempts remaining.
+### Use this when customer says they didn't receive the OTP.
+### =====================================================================
+# @name adminViewOtp
+GET {{adminBaseUrl}}/otp/APP-20260812-000672760
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+
+### =====================================================================
+### Admin: Resend OTP for an application
+### Generates a new OTP, sends it to customer, and returns the OTP to admin.
+### Old OTP is invalidated.
+### =====================================================================
+# @name adminResendOtp
+POST {{adminBaseUrl}}/otp/APP-20260812-000672760/resend
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}

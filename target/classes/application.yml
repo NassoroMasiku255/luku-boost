@@ -1,0 +1,149 @@
+spring:
+  application:
+    name: lukuboost-electricity-loan
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://127.0.0.1:3306/lukuboost?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:Choro@8697}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 600000
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: false
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      timeout: 5000
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+    time-zone: UTC
+
+server:
+  port: 8080
+  error:
+    include-stacktrace: never
+    include-message: always
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+# Application Configuration
+app:
+  jwt:
+    secret: ${JWT_SECRET:dev-secret-key-change-in-production-minimum-256-bits-long-key-here-at-least}
+    access-token-expiry-minutes: 15
+    refresh-token-expiry-days: 7
+    issuer: lukuboost
+
+  otp:
+    length: 6
+    expiry-seconds: 300
+    max-attempts: 5
+    resend-cooldown-seconds: 60
+    max-requests-per-hour: 5
+
+  loan:
+    min-amount: 1000
+    max-amount: 500000
+    default-percentage: 50
+    max-outstanding-loans: 1
+    loan-expiry-days: 30
+    currency: TZS
+
+  electricity:
+    provider:
+      active: mock
+      connect-timeout-ms: 5000
+      read-timeout-ms: 30000
+      retry-max-attempts: 3
+      retry-delay-ms: 2000
+
+  rate-limit:
+    otp-request:
+      max-per-hour: 5
+      max-per-day: 15
+    eligibility-check:
+      max-per-hour: 10
+    loan-request:
+      max-per-hour: 5
+
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:5173,http://127.0.0.1:61104}
+
+# Resilience4j
+resilience4j:
+  circuitbreaker:
+    instances:
+      electricityProvider:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED
+  retry:
+    instances:
+      electricityProviderStatus:
+        maxAttempts: 3
+        waitDuration: 2s
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+  timelimiter:
+    instances:
+      electricityProvider:
+        timeoutDuration: 30s
+
+logging:
+  level:
+    com.lukuboost: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{correlationId}] %-5level %logger{36} - %msg%n"
