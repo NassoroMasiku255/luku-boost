@@ -123,4 +123,34 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // Loan configuration
+    'loan' => [
+        'min_amount' => env('LOAN_MIN_AMOUNT', 1000),
+        'max_amount' => env('LOAN_MAX_AMOUNT', 500000),
+        'loan_expiry_days' => env('LOAN_EXPIRY_DAYS', 30),
+        'currency' => env('LOAN_CURRENCY', 'TZS'),
+        'default_percentage' => env('LOAN_DEFAULT_PERCENTAGE', 50),
+        'max_outstanding_loans' => env('LOAN_MAX_OUTSTANDING', 1),
+    ],
+
+    // OTP configuration
+    'otp' => [
+        'length' => env('OTP_LENGTH', 6),
+        'expiry_seconds' => env('OTP_EXPIRY_SECONDS', 300),
+        'max_attempts' => env('OTP_MAX_ATTEMPTS', 5),
+        'resend_cooldown_seconds' => env('OTP_RESEND_COOLDOWN', 60),
+        'max_requests_per_hour' => env('OTP_MAX_REQUESTS_PER_HOUR', 5),
+    ],
+
+    // JWT configuration
+    'jwt' => [
+        'secret' => env('JWT_SECRET', 'lukuboost-jwt-secret-key-minimum-32-characters-long-for-hs256'),
+        'access_token_expiry_minutes' => env('JWT_ACCESS_EXPIRY_MINUTES', 60),
+        'refresh_token_expiry_days' => env('JWT_REFRESH_EXPIRY_DAYS', 7),
+        'issuer' => env('JWT_ISSUER', 'lukuboost'),
+    ],
+
+    // CORS
+    'cors_allowed_origins' => env('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://localhost:3000'),
+
 ];
