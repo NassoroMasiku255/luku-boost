@@ -437,6 +437,7 @@ public class LoanService {
                 .orElseThrow(() -> new ResourceNotFoundException("Loan", loanRef));
     }
 
+    @Transactional
     public ElectricityTransaction getElectricityTransactionByLoanId(UUID loanId) {
         return electricityTransactionRepository.findAll().stream()
                 .filter(et -> et.getLoan() != null && et.getLoan().getId().equals(loanId))
