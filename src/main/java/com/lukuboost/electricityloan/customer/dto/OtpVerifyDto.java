@@ -18,5 +18,5 @@ public class OtpVerifyDto {
 
     @NotBlank(message = "OTP is required")
     @Size(min = 4, max = 8, message = "OTP must be between 4 and 8 characters")
-    private String otp;
+    private int otp;
 }
