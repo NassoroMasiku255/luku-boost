@@ -442,11 +442,7 @@ public class LoanService {
                 .orElseThrow(() -> new ResourceNotFoundException("Loan", loanRef));
     }
 
-<<<<<<< HEAD
-     @Transactional
-=======
     @Transactional
->>>>>>> df524db94925bdf9c40caa5d4e37af293a4a559d
     public ElectricityTransaction getElectricityTransactionByLoanId(UUID loanId) {
         return electricityTransactionRepository.findAll().stream()
                 .filter(et -> et.getLoan() != null && et.getLoan().getId().equals(loanId))
