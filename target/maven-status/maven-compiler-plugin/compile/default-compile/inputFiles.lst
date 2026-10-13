@@ -86,6 +86,7 @@
 /Users/nassoro.masiku/Desktop/wedding/luku boost/backend/src/main/java/com/lukuboost/electricityloan/loan/service/LoanStateMachine.java
 /Users/nassoro.masiku/Desktop/wedding/luku boost/backend/src/main/java/com/lukuboost/electricityloan/meter/entity/Meter.java
 /Users/nassoro.masiku/Desktop/wedding/luku boost/backend/src/main/java/com/lukuboost/electricityloan/meter/repository/MeterRepository.java
+/Users/nassoro.masiku/Desktop/wedding/luku boost/backend/src/main/java/com/lukuboost/electricityloan/notification/config/WhatsAppProperties.java
 /Users/nassoro.masiku/Desktop/wedding/luku boost/backend/src/main/java/com/lukuboost/electricityloan/notification/entity/Notification.java
 /Users/nassoro.masiku/Desktop/wedding/luku boost/backend/src/main/java/com/lukuboost/electricityloan/notification/repository/NotificationRepository.java
 /Users/nassoro.masiku/Desktop/wedding/luku boost/backend/src/main/java/com/lukuboost/electricityloan/notification/service/NotificationService.java

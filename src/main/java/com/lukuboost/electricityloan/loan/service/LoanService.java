@@ -384,14 +384,19 @@ public class LoanService {
                 transitionApplication(application, "COMPLETED");
 
                 // Notify customer
-                notificationService.sendLoanApproval(
-                        application.getPhoneNumber(), loanRef, purchase.getToken());
+                notificationService.sendLoanApproval(loan, elecTxn);
 
                 loansCompletedCounter.increment();
                 auditService.logSystemEvent("LOAN_COMPLETED", "LOAN", loan.getId().toString(),
                         "Loan completed: " + loanRef + ", token delivered");
 
                 log.info("Loan completed: ref={}, tokenRef={}", loanRef, elecTxn.getInternalRef());
+                
+                // Initialize meter to avoid LazyInitializationException in controller
+                if (loan.getMeter() != null) {
+                    loan.getMeter().getMeterNumber();
+                }
+                
                 return loan;
 
             } else {
@@ -433,10 +438,11 @@ public class LoanService {
     }
 
     public Loan getLoanByRef(String loanRef) {
-        return loanRepository.findByLoanRef(loanRef)
+        return loanRepository.findByLoanRefWithMeter(loanRef)
                 .orElseThrow(() -> new ResourceNotFoundException("Loan", loanRef));
     }
 
+     @Transactional
     public ElectricityTransaction getElectricityTransactionByLoanId(UUID loanId) {
         return electricityTransactionRepository.findAll().stream()
                 .filter(et -> et.getLoan() != null && et.getLoan().getId().equals(loanId))

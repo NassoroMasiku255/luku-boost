@@ -17,6 +17,9 @@ import java.util.UUID;
 @Repository
 public interface LoanRepository extends JpaRepository<Loan, UUID> {
 
+    @Query("SELECT l FROM Loan l JOIN FETCH l.meter JOIN FETCH l.application WHERE l.loanRef = :loanRef")
+    Optional<Loan> findByLoanRefWithMeter(@Param("loanRef") String loanRef);
+
     Optional<Loan> findByLoanRef(String loanRef);
 
     List<Loan> findByCustomerIdAndStatus(UUID customerId, String status);
@@ -62,6 +65,9 @@ public interface LoanRepository extends JpaRepository<Loan, UUID> {
 
     @Query("SELECT COALESCE(SUM(l.principalAmount), 0) FROM Loan l WHERE l.createdAt >= :from AND l.createdAt < :to")
     BigDecimal sumAmountBetween(@Param("from") Instant from, @Param("to") Instant to);
+
+    @Query("SELECT l FROM Loan l JOIN FETCH l.meter WHERE l.customer.id = :customerId")
+    List<Loan> findByCustomerIdWithMeter(@Param("customerId") UUID customerId);
 
     List<Loan> findByCustomerId(UUID customerId);
 }

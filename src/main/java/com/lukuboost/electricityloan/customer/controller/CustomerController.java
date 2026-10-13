@@ -263,7 +263,7 @@ public class CustomerController {
             @RequestParam String phoneNumber) {
 
         var customer = customerService.getByPhone(phoneNumber);
-        List<Loan> loans = loanRepository.findByCustomerId(customer.getId());
+        List<Loan> loans = loanRepository.findByCustomerIdWithMeter(customer.getId());
 
         List<LoanResponseDto> response = loans.stream()
                 .map(loan -> LoanResponseDto.builder()

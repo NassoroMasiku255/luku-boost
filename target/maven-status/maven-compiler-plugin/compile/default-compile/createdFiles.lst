@@ -14,6 +14,7 @@ com/lukuboost/electricityloan/notification/entity/Notification.class
 com/lukuboost/electricityloan/common/entity/BaseEntity.class
 com/lukuboost/electricityloan/admin/controller/AdminOtpController.class
 com/lukuboost/electricityloan/eligibility/dto/LoanEligibilityResult.class
+com/lukuboost/electricityloan/notification/config/WhatsAppProperties.class
 com/lukuboost/electricityloan/admin/controller/AdminLoanController.class
 com/lukuboost/electricityloan/customer/dto/LoanResponseDto.class
 com/lukuboost/electricityloan/loan/repository/LoanRepository.class

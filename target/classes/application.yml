@@ -13,12 +13,11 @@ spring:
       idle-timeout: 300000
       max-lifetime: 600000
       connection-timeout: 20000
-
   jpa:
     hibernate:
       ddl-auto: update
     open-in-view: false
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -142,8 +141,16 @@ resilience4j:
 
 logging:
   level:
-    com.lukuboost: DEBUG
+    com.lukuboost: INFO
     org.springframework.security: INFO
-    org.hibernate.SQL: WARN
+    org.hibernate.SQL: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{correlationId}] %-5level %logger{36} - %msg%n"
+whatsapp:
+  api-url: ${WHATSAPP_API_URL:https://graph.facebook.com/v25.0/1317524134784685/messages}
+  access-token: ${WHATSAPP_ACCESS_TOKEN:EAAg6yykXbjABSjw4MOZCWuQWDWMl1SePnYkIeehSUDxTtBCZAHvmlUvyskpHr6mq1ruYxCZAyh5KDRLvMB4zICZB3MfGLT0jcOtWQRdd17dz90fNtgveR10DTDskstEdv2xITpHBk3RGMlku5GrqSGS7YCvEIsZCJD6r1ThCJ3QSqkTtuCJIEZAQhI9TcgEwZDZD}
+  otp-template-name: ${WHATSAPP_OTP_TEMPLATE:lukuboost_auth}
+  otp-template-language: ${WHATSAPP_OTP_LANG:en}
+  loan-approved-template-name: ${WHATSAPP_LOAN_APPROVED_TEMPLATE:lukuboost_response}
+  loan-approved-template-language: ${WHATSAPP_LOAN_APPROVED_LANG:en}
+  default-country-code: ${WHATSAPP_DEFAULT_CC:255}
