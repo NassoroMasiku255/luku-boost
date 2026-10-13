@@ -88,7 +88,7 @@ public class OtpService {
     }
 
     @Transactional
-    public boolean verifyOtp(String applicationRef, String otpValue, String ipAddress, String userAgent) {
+    public boolean verifyOtp(String applicationRef, int otpValue, String ipAddress, String userAgent) {
         OtpRequest otpRequest = otpRequestRepository
                 .findByApplicationRefAndStatus(applicationRef, "PENDING")
                 .orElseThrow(() -> new BusinessException("OTP_NOT_FOUND",
@@ -108,7 +108,8 @@ public class OtpService {
             throw new BusinessException("OTP_BLOCKED", "Maximum verification attempts exceeded.");
         }
 
-        String hash = hashOtp(otpValue, otpRequest.getSalt());
+        String otpString = String.format("%0" + otpLength + "d", otpValue);
+        String hash = hashOtp(otpString, otpRequest.getSalt());
         boolean valid = hash.equals(otpRequest.getOtpHash());
 
         if (valid) {

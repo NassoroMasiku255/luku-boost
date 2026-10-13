@@ -290,7 +290,7 @@ public class LoanService {
     // to third party, updates transaction, and saves loan on success.
     // ========================================================================
     @Transactional
-    public Loan verifyOtpAndDisburse(String applicationRef, String otp, String ipAddress, String userAgent) {
+    public Loan verifyOtpAndDisburse(String applicationRef, int otp, String ipAddress, String userAgent) {
         log.info("OTP verification and disbursement for applicationRef={}", applicationRef);
 
         LoanApplication application = getApplicationByRef(applicationRef);

@@ -94,7 +94,7 @@ class OtpServiceTest {
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() ->
-                otpService.verifyOtp("APP-001", "123456", "127.0.0.1", "Chrome"))
+                otpService.verifyOtp("APP-001", 123456, "127.0.0.1", "Chrome"))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining("No pending OTP");
     }
@@ -116,7 +116,7 @@ class OtpServiceTest {
                 .thenReturn(Optional.of(otp));
 
         assertThatThrownBy(() ->
-                otpService.verifyOtp("APP-001", "123456", "127.0.0.1", "Chrome"))
+                otpService.verifyOtp("APP-001", 123456, "127.0.0.1", "Chrome"))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining("expired");
     }
@@ -138,7 +138,7 @@ class OtpServiceTest {
                 .thenReturn(Optional.of(otp));
 
         assertThatThrownBy(() ->
-                otpService.verifyOtp("APP-001", "123456", "127.0.0.1", "Chrome"))
+                otpService.verifyOtp("APP-001", 123456, "127.0.0.1", "Chrome"))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining("attempts");
     }

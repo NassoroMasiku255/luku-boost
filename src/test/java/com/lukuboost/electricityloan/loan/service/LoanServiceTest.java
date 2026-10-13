@@ -200,7 +200,7 @@ class LoanServiceTest {
                 .thenReturn(Optional.of(testApp));
 
         assertThatThrownBy(() ->
-                loanService.verifyOtpAndDisburse("APP-20260810-001", "123456", "127.0.0.1", "Chrome"))
+                loanService.verifyOtpAndDisburse("APP-20260810-001", 123456, "127.0.0.1", "Chrome"))
                 .isInstanceOf(BusinessException.class);
     }
 }
