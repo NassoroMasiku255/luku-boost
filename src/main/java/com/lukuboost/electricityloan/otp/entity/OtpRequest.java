@@ -6,7 +6,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "otp_requests")
@@ -19,8 +18,8 @@ import java.util.UUID;
 public class OtpRequest {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "phone_number", nullable = false, length = 20)
     private String phoneNumber;

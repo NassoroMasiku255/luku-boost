@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface LoanApplicationRepository extends JpaRepository<LoanApplication, UUID> {
+public interface LoanApplicationRepository extends JpaRepository<LoanApplication, Long> {
 
     Optional<LoanApplication> findByApplicationRef(String applicationRef);
 

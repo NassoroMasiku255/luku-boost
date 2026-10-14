@@ -35,5 +35,5 @@ public class SystemConfiguration extends BaseEntity {
     private Boolean isSensitive = false;
 
     @Column(name = "updated_by")
-    private UUID updatedBy;
+    private Long updatedBy;
 }

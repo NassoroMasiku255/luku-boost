@@ -4,6 +4,7 @@ import com.lukuboost.electricityloan.audit.service.AuditService;
 import com.lukuboost.electricityloan.common.exception.BusinessException;
 import com.lukuboost.electricityloan.common.exception.DuplicateOperationException;
 import com.lukuboost.electricityloan.common.exception.ResourceNotFoundException;
+import java.util.List;
 import com.lukuboost.electricityloan.common.utility.ReferenceGenerator;
 import com.lukuboost.electricityloan.customer.entity.Customer;
 import com.lukuboost.electricityloan.customer.service.CustomerService;
@@ -20,6 +21,7 @@ import com.lukuboost.electricityloan.loan.entity.LoanTransaction;
 import com.lukuboost.electricityloan.loan.repository.LoanApplicationRepository;
 import com.lukuboost.electricityloan.loan.repository.LoanRepository;
 import com.lukuboost.electricityloan.loan.repository.LoanTransactionRepository;
+import org.springframework.data.domain.PageRequest;
 import com.lukuboost.electricityloan.meter.entity.Meter;
 import com.lukuboost.electricityloan.notification.service.NotificationService;
 import com.lukuboost.electricityloan.otp.service.OtpService;
@@ -112,10 +114,10 @@ public class LoanService {
         log.info("Eligibility check requested for phone={}***, meter={}", maskPhone(phoneNumber), meterNumber);
 
         // 1. Check if phone number already has an active loan
-        if (loanRepository.existsActiveByPhoneNumber(phoneNumber)) {
-            throw new BusinessException("PHONE_HAS_ACTIVE_LOAN",
-                    "This phone number already has an outstanding loan. Please repay first.", HttpStatus.CONFLICT);
-        }
+//        if (loanRepository.existsActiveByPhoneNumber(phoneNumber)) {
+//            throw new BusinessException("PHONE_HAS_ACTIVE_LOAN",
+//                    "This phone number already has an outstanding loan. Please repay first.", HttpStatus.CONFLICT);
+//        }
 
         // 2. Check if meter number already has an active loan
         if (loanRepository.existsActiveByMeterNumber(meterNumber)) {
@@ -442,8 +444,41 @@ public class LoanService {
                 .orElseThrow(() -> new ResourceNotFoundException("Loan", loanRef));
     }
 
+    public Loan getLastLoanByMeterNumber(String meterNumber) {
+        if (!isValidMeterNumber(meterNumber)) {
+            throw new BusinessException("BAD_REQUEST", "Invalid meter number");
+        }
+        List<Loan> loans = loanRepository.findLatestByMeterNumber(meterNumber, PageRequest.of(0, 1));
+        if (loans.isEmpty()) {
+            throw new ResourceNotFoundException("Loan", "meterNumber: " + meterNumber);
+        }
+        return loans.get(0);
+    }
+
     @Transactional
-    public ElectricityTransaction getElectricityTransactionByLoanId(UUID loanId) {
+    public void completeLoan(Long loanId) {
+        log.info("Manually completing loan: id={}", loanId);
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new ResourceNotFoundException("Loan", loanId.toString()));
+
+        if ("COMPLETED".equals(loan.getStatus())) {
+            throw new BusinessException("LOAN_ALREADY_COMPLETED", "This loan is already completed.");
+        }
+
+        loan.setStatus("COMPLETED");
+        loan.setOutstandingAmount(BigDecimal.ZERO);
+        loan.setCompletedAt(Instant.now());
+        loanRepository.save(loan);
+
+        loansCompletedCounter.increment();
+        auditService.logSystemEvent("LOAN_COMPLETED", "LOAN", loan.getId().toString(),
+                "Loan manually marked as COMPLETED by admin");
+
+        log.info("Loan manually completed: id={}, ref={}", loanId, loan.getLoanRef());
+    }
+
+    @Transactional
+    public ElectricityTransaction getElectricityTransactionByLoanId(Long loanId) {
         return electricityTransactionRepository.findAll().stream()
                 .filter(et -> et.getLoan() != null && et.getLoan().getId().equals(loanId))
                 .findFirst().orElse(null);

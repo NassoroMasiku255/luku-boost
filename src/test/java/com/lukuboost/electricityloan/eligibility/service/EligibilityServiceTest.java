@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -47,7 +46,7 @@ class EligibilityServiceTest {
 
     @Test
     void calculateEligibility_shouldReturnEligibleForValidMeter() {
-        UUID customerId = UUID.randomUUID();
+        Long customerId = 1L;
         MeterInformation meterInfo = MeterInformation.builder()
                 .meterNumber("12345678901")
                 .customerName("John Doe")
@@ -73,7 +72,7 @@ class EligibilityServiceTest {
 
     @Test
     void calculateEligibility_shouldReturnNotEligibleWhenTooManyActiveLoans() {
-        UUID customerId = UUID.randomUUID();
+        Long customerId = 1L;
         MeterInformation meterInfo = MeterInformation.builder()
                 .meterNumber("12345678901")
                 .customerName("John Doe")
@@ -97,7 +96,7 @@ class EligibilityServiceTest {
 
     @Test
     void calculateEligibility_shouldReturnNotEligibleForInactiveMeter() {
-        UUID customerId = UUID.randomUUID();
+        Long customerId = 1L;
         MeterInformation meterInfo = MeterInformation.builder()
                 .meterNumber("12345678901")
                 .customerName("John Doe")

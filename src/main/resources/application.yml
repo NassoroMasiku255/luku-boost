@@ -15,101 +15,101 @@ spring:
       connection-timeout: 20000
   jpa:
     hibernate:
-      ddl-auto: update
-    open-in-view: false
-    show-sql: false
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
+    show-sql: ${SPRING_JPA_SHOW_SQL:false}
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        format_sql: true
+        dialect: ${SPRING_JPA_HIBERNATE_DIALECT:org.hibernate.dialect.MySQLDialect}
+        format_sql: ${SPRING_JPA_HIBERNATE_FORMAT_SQL:true}
         jdbc:
-          time_zone: UTC
+          time_zone: ${SPRING_JPA_HIBERNATE_JDBC_TIME_ZONE:UTC}
 
   flyway:
-    enabled: false
+    enabled: ${SPRING_FLYWAY_ENABLED:false}
 
   data:
     redis:
       host: ${SPRING_DATA_REDIS_HOST:localhost}
       port: ${SPRING_DATA_REDIS_PORT:6379}
-      timeout: 5000
+      timeout: ${SPRING_DATA_REDIS_TIMEOUT:5000}
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 
   jackson:
     serialization:
-      write-dates-as-timestamps: false
+      write-dates-as-timestamps: ${SPRING_JACKSON_SERIALIZATION_WRITE_DATES_AS_TIMESTAMPS:false}
     deserialization:
-      fail-on-unknown-properties: false
-    default-property-inclusion: non_null
-    time-zone: UTC
+      fail-on-unknown-properties: ${SPRING_JACKSON_DESERIALIZATION_FAIL_ON_UNKNOWN_PROPERTIES:false}
+    default-property-inclusion: ${SPRING_JACKSON_DEFAULT_PROPERTY_INCLUSION:non_null}
+    time-zone: ${SPRING_JACKSON_TIME_ZONE:UTC}
 
 server:
   port: ${SERVER_PORT:9000}
   error:
-    include-stacktrace: never
-    include-message: always
+    include-stacktrace: ${SERVER_ERROR_INCLUDE_STACKTRACE:never}
+    include-message: ${SERVER_ERROR_INCLUDE_MESSAGE:always}
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus,metrics
+        include: ${MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE:health,info,prometheus,metrics}
   endpoint:
     health:
-      show-details: when_authorized
+      show-details: ${MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS:when_authorized}
   metrics:
     tags:
       application: ${spring.application.name}
 
 springdoc:
   api-docs:
-    path: /api-docs
+    path: ${SPRINGDOC_API_DOCS_PATH:/api-docs}
   swagger-ui:
-    path: /swagger-ui.html
-    tags-sorter: alpha
-    operations-sorter: alpha
+    path: ${SPRINGDOC_SWAGGER_UI_PATH:/swagger-ui.html}
+    tags-sorter: ${SPRINGDOC_SWAGGER_UI_TAGS_SORTER:alpha}
+    operations-sorter: ${SPRINGDOC_SWAGGER_UI_OPERATIONS_SORTER:alpha}
 
 # Application Configuration
 app:
   jwt:
     secret: ${JWT_SECRET:dev-secret-key-change-in-production-minimum-256-bits-long-key-here-at-least}
-    access-token-expiry-minutes: 15
-    refresh-token-expiry-days: 7
-    issuer: lukuboost
+    access-token-expiry-minutes: ${JWT_ACCESS_TOKEN_EXPIRY_MINUTES:15}
+    refresh-token-expiry-days: ${JWT_REFRESH_TOKEN_EXPIRY_DAYS:7}
+    issuer: ${JWT_ISSUER:lukuboost}
 
   otp:
-    length: 6
-    expiry-seconds: 300
-    max-attempts: 5
-    resend-cooldown-seconds: 60
-    max-requests-per-hour: 5
+    length: ${OTP_LENGTH:6}
+    expiry-seconds: ${OTP_EXPIRY_SECONDS:300}
+    max-attempts: ${OTP_MAX_ATTEMPTS:5}
+    resend-cooldown-seconds: ${OTP_RESEND_COOLDOWN_SECONDS:60}
+    max-requests-per-hour: ${OTP_MAX_REQUESTS_PER_HOUR:5}
 
   loan:
-    min-amount: 1000
-    max-amount: 500000
-    default-percentage: 50
-    max-outstanding-loans: 1
-    loan-expiry-days: 30
-    currency: TZS
+    min-amount: ${LOAN_MIN_AMOUNT:1000}
+    max-amount: ${LOAN_MAX_AMOUNT:500000}
+    default-percentage: ${LOAN_DEFAULT_PERCENTAGE:50}
+    max-outstanding-loans: ${LOAN_MAX_OUTSTANDING_LOANS:5}
+    loan-expiry-days: ${LOAN_LOAN_EXPIRY_DAYS:30}
+    currency: ${LOAN_CURRENCY:TZS}
 
   electricity:
     provider:
-      active: mock
-      connect-timeout-ms: 5000
-      read-timeout-ms: 30000
-      retry-max-attempts: 3
-      retry-delay-ms: 2000
+      active: ${ELECTRICITY_PROVIDER_ACTIVE:mock}
+      connect-timeout-ms: ${ELECTRICITY_PROVIDER_CONNECT_TIMEOUT_MS:5000}
+      read-timeout-ms: ${ELECTRICITY_PROVIDER_READ_TIMEOUT_MS:30000}
+      retry-max-attempts: ${ELECTRICITY_PROVIDER_RETRY_MAX_ATTEMPTS:3}
+      retry-delay-ms: ${ELECTRICITY_PROVIDER_RETRY_DELAY_MS:2000}
 
   rate-limit:
     otp-request:
-      max-per-hour: 5
-      max-per-day: 15
+      max-per-hour: ${RATE_LIMIT_OTP_MAX_PER_HOUR:5}
+      max-per-day: ${RATE_LIMIT_OTP_MAX_PER_DAY:15}
     eligibility-check:
-      max-per-hour: 10
+      max-per-hour: ${RATE_LIMIT_ELIGIBILITY_MAX_PER_HOUR:10}
     loan-request:
-      max-per-hour: 5
+      max-per-hour: ${RATE_LIMIT_LOAN_MAX_PER_HOUR:5}
 
   cors:
     allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:5173,http://127.0.0.1:61104}
@@ -119,33 +119,33 @@ resilience4j:
   circuitbreaker:
     instances:
       electricityProvider:
-        slidingWindowSize: 10
-        minimumNumberOfCalls: 5
-        failureRateThreshold: 50
-        waitDurationInOpenState: 30s
-        permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowType: COUNT_BASED
+        slidingWindowSize: ${RESILIENCE4J_CB_SLIDING_WINDOW_SIZE:10}
+        minimumNumberOfCalls: ${RESILIENCE4J_CB_MIN_CALLS:5}
+        failureRateThreshold: ${RESILIENCE4J_CB_FAILURE_RATE_THRESHOLD:50}
+        waitDurationInOpenState: ${RESILIENCE4J_CB_WAIT_DURATION:30s}
+        permittedNumberOfCallsInHalfOpenState: ${RESILIENCE4J_CB_HALF_OPEN_CALLS:3}
+        slidingWindowType: ${RESILIENCE4J_CB_SLIDING_WINDOW_TYPE:COUNT_BASED}
   retry:
     instances:
       electricityProviderStatus:
-        maxAttempts: 3
-        waitDuration: 2s
-        exponentialBackoffMultiplier: 2
+        maxAttempts: ${RESILIENCE4J_RETRY_MAX_ATTEMPTS:3}
+        waitDuration: ${RESILIENCE4J_RETRY_WAIT_DURATION:2s}
+        exponentialBackoffMultiplier: ${RESILIENCE4J_RETRY_BACKOFF_MULTIPLIER:2}
         retryExceptions:
           - java.io.IOException
           - java.util.concurrent.TimeoutException
   timelimiter:
     instances:
       electricityProvider:
-        timeoutDuration: 30s
+        timeoutDuration: ${RESILIENCE4J_TIMELIMITER_TIMEOUT:30s}
 
 logging:
   level:
-    com.lukuboost: INFO
-    org.springframework.security: INFO
-    org.hibernate.SQL: INFO
+    com.lukuboost: ${LOGGING_LEVEL_APP:INFO}
+    org.springframework.security: ${LOGGING_LEVEL_SECURITY:INFO}
+    org.hibernate.SQL: ${LOGGING_LEVEL_SQL:INFO}
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{correlationId}] %-5level %logger{36} - %msg%n"
+    console: ${LOGGING_PATTERN_CONSOLE:%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{correlationId}] %-5level %logger{36} - %msg%n}
 whatsapp:
   api-url: ${WHATSAPP_API_URL:https://graph.facebook.com/v25.0/1317524134784685/messages}
   access-token: ${WHATSAPP_ACCESS_TOKEN:EAAg6yykXbjABSjw4MOZCWuQWDWMl1SePnYkIeehSUDxTtBCZAHvmlUvyskpHr6mq1ruYxCZAyh5KDRLvMB4zICZB3MfGLT0jcOtWQRdd17dz90fNtgveR10DTDskstEdv2xITpHBk3RGMlku5GrqSGS7YCvEIsZCJD6r1ThCJ3QSqkTtuCJIEZAQhI9TcgEwZDZD}

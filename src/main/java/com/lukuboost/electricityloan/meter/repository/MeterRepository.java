@@ -10,16 +10,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface MeterRepository extends JpaRepository<Meter, UUID> {
+public interface MeterRepository extends JpaRepository<Meter, Long> {
 
     Optional<Meter> findByMeterNumber(String meterNumber);
 
     boolean existsByMeterNumber(String meterNumber);
 
-    List<Meter> findByCustomerId(UUID customerId);
+    List<Meter> findByCustomerId(Long customerId);
 
     @Query("SELECT m FROM Meter m WHERE " +
             "(:meterNumber IS NULL OR m.meterNumber LIKE %:meterNumber%) AND " +

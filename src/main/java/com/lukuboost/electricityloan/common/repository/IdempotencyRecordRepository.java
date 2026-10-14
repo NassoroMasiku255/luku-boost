@@ -9,10 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface IdempotencyRecordRepository extends JpaRepository<IdempotencyRecord, UUID> {
+public interface IdempotencyRecordRepository extends JpaRepository<IdempotencyRecord, Long> {
 
     Optional<IdempotencyRecord> findByIdempotencyKeyAndOperation(String idempotencyKey, String operation);
 

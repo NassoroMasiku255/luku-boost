@@ -90,7 +90,7 @@ public class AdminConfigController {
     @Operation(summary = "Update system configuration")
     @PreAuthorize("hasAuthority('CONFIG_UPDATE') or hasAuthority('CONFIG_MANAGE')")
     public ResponseEntity<ApiResponse<SystemConfiguration>> updateSystemConfig(
-            @PathVariable UUID id, @RequestBody Map<String, Object> body) {
+            @PathVariable Long id, @RequestBody Map<String, Object> body) {
         SystemConfiguration config = systemConfigRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("SystemConfiguration", id.toString()));
 
@@ -116,7 +116,7 @@ public class AdminConfigController {
     @DeleteMapping("/system/{id}")
     @Operation(summary = "Delete system configuration")
     @PreAuthorize("hasAuthority('CONFIG_UPDATE') or hasAuthority('CONFIG_MANAGE')")
-    public ResponseEntity<ApiResponse<Void>> deleteSystemConfig(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> deleteSystemConfig(@PathVariable Long id) {
         SystemConfiguration config = systemConfigRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("SystemConfiguration", id.toString()));
 
@@ -178,7 +178,7 @@ public class AdminConfigController {
     @Operation(summary = "Update loan rule configuration")
     @PreAuthorize("hasAuthority('CONFIG_UPDATE') or hasAuthority('CONFIG_MANAGE')")
     public ResponseEntity<ApiResponse<LoanRuleConfiguration>> updateLoanRule(
-            @PathVariable UUID id, @RequestBody Map<String, Object> body) {
+            @PathVariable Long id, @RequestBody Map<String, Object> body) {
         LoanRuleConfiguration rule = loanRuleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("LoanRuleConfiguration", id.toString()));
 
@@ -200,7 +200,7 @@ public class AdminConfigController {
     @DeleteMapping("/loan-rules/{id}")
     @Operation(summary = "Delete loan rule configuration")
     @PreAuthorize("hasAuthority('CONFIG_UPDATE') or hasAuthority('CONFIG_MANAGE')")
-    public ResponseEntity<ApiResponse<Void>> deleteLoanRule(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> deleteLoanRule(@PathVariable Long id) {
         LoanRuleConfiguration rule = loanRuleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("LoanRuleConfiguration", id.toString()));
 

@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AdminUserDto {
 
-    private UUID id;
+    private Long id;
     private String username;
     private String email;
     private String fullName;

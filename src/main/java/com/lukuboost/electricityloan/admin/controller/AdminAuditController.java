@@ -30,7 +30,7 @@ public class AdminAuditController {
     @Operation(summary = "Search audit logs")
     @PreAuthorize("hasAuthority('AUDIT_VIEW')")
     public ResponseEntity<ApiResponse<PagedResponse<AuditLog>>> searchAuditLogs(
-            @RequestParam(required = false) UUID userId,
+            @RequestParam(required = false) Long userId,
             @RequestParam(required = false) String action,
             @RequestParam(required = false) String entityType,
             @RequestParam(required = false) String entityId,

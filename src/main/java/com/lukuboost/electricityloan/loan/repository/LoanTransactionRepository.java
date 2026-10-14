@@ -11,14 +11,13 @@ import org.springframework.stereotype.Repository;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface LoanTransactionRepository extends JpaRepository<LoanTransaction, UUID> {
+public interface LoanTransactionRepository extends JpaRepository<LoanTransaction, Long> {
 
     Optional<LoanTransaction> findByTransactionRef(String transactionRef);
 
-    List<LoanTransaction> findByLoanId(UUID loanId);
+    List<LoanTransaction> findByLoanId(Long loanId);
 
     @Query("SELECT lt FROM LoanTransaction lt WHERE " +
             "(:ref IS NULL OR lt.transactionRef LIKE %:ref%) AND " +

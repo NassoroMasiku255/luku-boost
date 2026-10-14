@@ -42,5 +42,5 @@ public class ApiClient extends BaseEntity {
     private Instant lastUsedAt;
 
     @Column(name = "created_by")
-    private UUID createdBy;
+    private Long createdBy;
 }

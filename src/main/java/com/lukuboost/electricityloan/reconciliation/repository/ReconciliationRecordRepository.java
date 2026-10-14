@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface ReconciliationRecordRepository extends JpaRepository<ReconciliationRecord, UUID> {
+public interface ReconciliationRecordRepository extends JpaRepository<ReconciliationRecord, Long> {
 
     Optional<ReconciliationRecord> findByReconRef(String reconRef);
 

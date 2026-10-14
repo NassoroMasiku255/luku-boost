@@ -49,7 +49,7 @@ public class AdminUserController {
     @GetMapping("/{id}")
     @Operation(summary = "Get admin user by ID")
     @PreAuthorize("hasAuthority('USER_VIEW')")
-    public ResponseEntity<ApiResponse<AdminUserDto>> getUser(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<AdminUserDto>> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(adminUserService.getUser(id)));
     }
 
@@ -66,7 +66,7 @@ public class AdminUserController {
     @Operation(summary = "Update admin user status")
     @PreAuthorize("hasAuthority('USER_MANAGE')")
     public ResponseEntity<ApiResponse<AdminUserDto>> updateStatus(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @RequestBody Map<String, String> body) {
         AdminUserDto user = adminUserService.updateUserStatus(id, body.get("status"));
         return ResponseEntity.ok(ApiResponse.success(user));

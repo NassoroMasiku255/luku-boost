@@ -42,5 +42,5 @@ public class LoanRuleConfiguration extends BaseEntity {
     private Instant effectiveTo;
 
     @Column(name = "updated_by")
-    private UUID updatedBy;
+    private Long updatedBy;
 }

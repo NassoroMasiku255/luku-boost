@@ -7,7 +7,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "failed_transactions")
@@ -20,8 +19,8 @@ import java.util.UUID;
 public class FailedTransaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "original_ref", nullable = false, length = 40)
     private String originalRef;
@@ -33,7 +32,7 @@ public class FailedTransaction {
     private String entityType;
 
     @Column(name = "entity_id")
-    private UUID entityId;
+    private Long entityId;
 
     @Column(name = "failure_reason", nullable = false)
     private String failureReason;
@@ -60,7 +59,7 @@ public class FailedTransaction {
     private String resolutionNotes;
 
     @Column(name = "resolved_by")
-    private UUID resolvedBy;
+    private Long resolvedBy;
 
     @Column(name = "resolved_at")
     private Instant resolvedAt;

@@ -44,7 +44,7 @@ public class AdminUserService {
 
         Set<Role> roles = new HashSet<>();
         if (request.getRoleIds() != null) {
-            for (UUID roleId : request.getRoleIds()) {
+            for (Long roleId : request.getRoleIds()) {
                 roles.add(roleRepository.findById(roleId)
                         .orElseThrow(() -> new ResourceNotFoundException("Role", roleId.toString())));
             }
@@ -74,13 +74,13 @@ public class AdminUserService {
     }
 
     @Transactional(readOnly = true)
-    public AdminUserDto getUser(UUID id) {
+    public AdminUserDto getUser(Long id) {
         return toDto(adminUserRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("AdminUser", id.toString())));
     }
 
     @Transactional
-    public AdminUserDto updateUserStatus(UUID id, String status) {
+    public AdminUserDto updateUserStatus(Long id, String status) {
         AdminUser user = adminUserRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("AdminUser", id.toString()));
         String oldStatus = user.getStatus();

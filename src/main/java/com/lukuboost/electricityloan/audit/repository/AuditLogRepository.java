@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Repository
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
@@ -22,7 +21,7 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
             "(:from IS NULL OR a.createdAt >= :from) AND " +
             "(:to IS NULL OR a.createdAt <= :to)")
     Page<AuditLog> searchAuditLogs(
-            @Param("userId") UUID userId,
+            @Param("userId") Long userId,
             @Param("action") String action,
             @Param("entityType") String entityType,
             @Param("entityId") String entityId,

@@ -32,6 +32,7 @@ public class AdminLoanController {
     private final LoanRepository loanRepository;
     private final LoanApplicationRepository applicationRepository;
     private final ElectricityTransactionRepository electricityTransactionRepository;
+    private final com.lukuboost.electricityloan.loan.service.LoanService loanService;
 
     @GetMapping
     @Operation(summary = "Search loans")
@@ -39,7 +40,7 @@ public class AdminLoanController {
     public ResponseEntity<ApiResponse<PagedResponse<LoanResponseDto>>> searchLoans(
             @RequestParam(required = false) String ref,
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) UUID customerId,
+            @RequestParam(required = false) Long customerId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant to,
             @PageableDefault(size = 20) Pageable pageable) {
@@ -63,10 +64,18 @@ public class AdminLoanController {
     @GetMapping("/{id}")
     @Operation(summary = "Get loan details")
     @PreAuthorize("hasAuthority('LOAN_VIEW')")
-    public ResponseEntity<ApiResponse<LoanResponseDto>> getLoan(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<LoanResponseDto>> getLoan(@PathVariable Long id) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new com.lukuboost.electricityloan.common.exception.ResourceNotFoundException("Loan", id.toString()));
         return ResponseEntity.ok(ApiResponse.success(toDto(loan)));
+    }
+
+    @PatchMapping("/{id}/complete")
+    @Operation(summary = "Mark loan as COMPLETED")
+    @PreAuthorize("hasAuthority('LOAN_MANAGE')")
+    public ResponseEntity<ApiResponse<Void>> completeLoan(@PathVariable Long id) {
+        loanService.completeLoan(id);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     @GetMapping("/applications")

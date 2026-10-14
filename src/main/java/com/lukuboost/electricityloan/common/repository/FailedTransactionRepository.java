@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface FailedTransactionRepository extends JpaRepository<FailedTransaction, UUID> {
+public interface FailedTransactionRepository extends JpaRepository<FailedTransaction, Long> {
 
     @Query("SELECT f FROM FailedTransaction f WHERE f.status = 'PENDING' " +
             "AND f.retryCount < f.maxRetries " +

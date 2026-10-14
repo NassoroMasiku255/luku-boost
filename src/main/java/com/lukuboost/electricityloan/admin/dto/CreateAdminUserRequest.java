@@ -26,5 +26,5 @@ public class CreateAdminUserRequest {
     @NotBlank(message = "Full name is required")
     private String fullName;
 
-    private Set<UUID> roleIds;
+    private Set<Long> roleIds;
 }

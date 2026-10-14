@@ -30,7 +30,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -78,14 +77,14 @@ class LoanServiceTest {
                 .phoneNumber("255712345678")
                 .status("ACTIVE")
                 .build();
-        testCustomer.setId(UUID.randomUUID());
+        testCustomer.setId(1L);
 
         testMeter = Meter.builder()
                 .meterNumber("12345678901")
                 .customer(testCustomer)
                 .status("ACTIVE")
                 .build();
-        testMeter.setId(UUID.randomUUID());
+        testMeter.setId(1L);
 
         testApp = LoanApplication.builder()
                 .applicationRef("APP-20260810-001")
@@ -96,7 +95,7 @@ class LoanServiceTest {
                 .currency("TZS")
                 .status("INITIATED")
                 .build();
-        testApp.setId(UUID.randomUUID());
+        testApp.setId(1L);
     }
 
     @Test
@@ -108,7 +107,7 @@ class LoanServiceTest {
         when(applicationRepository.save(any(LoanApplication.class)))
                 .thenAnswer(inv -> {
                     LoanApplication app = inv.getArgument(0);
-                    app.setId(UUID.randomUUID());
+                    app.setId(1L);
                     return app;
                 });
 

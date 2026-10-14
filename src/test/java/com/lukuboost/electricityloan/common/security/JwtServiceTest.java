@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,7 +23,7 @@ class JwtServiceTest {
 
     @Test
     void generateAccessToken_shouldProduceValidToken() {
-        UUID userId = UUID.randomUUID();
+        Long userId = 1L;
         Set<String> permissions = Set.of("LOAN_VIEW", "CUSTOMER_VIEW");
 
         String token = jwtService.generateAccessToken(userId, "admin", permissions);
@@ -39,7 +38,7 @@ class JwtServiceTest {
 
     @Test
     void generateRefreshToken_shouldProduceValidToken() {
-        UUID userId = UUID.randomUUID();
+        Long userId = 1L;
 
         String token = jwtService.generateRefreshToken(userId);
 
@@ -58,7 +57,7 @@ class JwtServiceTest {
 
     @Test
     void validateToken_shouldReturnFalseForTamperedToken() {
-        UUID userId = UUID.randomUUID();
+        Long userId = 1L;
         String token = jwtService.generateAccessToken(userId, "admin", Set.of());
         String tampered = token.substring(0, token.length() - 5) + "XXXXX";
 

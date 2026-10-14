@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "audit_logs")
@@ -20,7 +19,7 @@ public class AuditLog {
     private Long id;
 
     @Column(name = "user_id")
-    private UUID userId;
+    private Long userId;
 
     @Column(name = "user_type", nullable = false, length = 20)
     @Builder.Default

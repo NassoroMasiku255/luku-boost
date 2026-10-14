@@ -47,7 +47,7 @@ class ReferenceGeneratorTest {
     @Test
     void generateCorrelationId_shouldBeUUID() {
         String id = ReferenceGenerator.generateCorrelationId();
-        assertThat(id).hasSize(32); // UUID without dashes
+        assertThat(id).hasSize(32); // Long without dashes
         assertThat(id).matches("[a-f0-9]{32}");
     }
 }

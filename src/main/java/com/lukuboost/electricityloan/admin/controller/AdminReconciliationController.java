@@ -61,7 +61,7 @@ public class AdminReconciliationController {
     @Operation(summary = "Resolve reconciliation record")
     @PreAuthorize("hasAuthority('RECONCILIATION_MANAGE')")
     public ResponseEntity<ApiResponse<ReconciliationRecord>> resolve(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @RequestBody Map<String, String> body,
             @AuthenticationPrincipal AdminPrincipal principal) {
 

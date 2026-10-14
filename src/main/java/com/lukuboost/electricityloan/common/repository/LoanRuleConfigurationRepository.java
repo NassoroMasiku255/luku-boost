@@ -7,10 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface LoanRuleConfigurationRepository extends JpaRepository<LoanRuleConfiguration, UUID> {
+public interface LoanRuleConfigurationRepository extends JpaRepository<LoanRuleConfiguration, Long> {
 
     Optional<LoanRuleConfiguration> findByRuleName(String ruleName);
 

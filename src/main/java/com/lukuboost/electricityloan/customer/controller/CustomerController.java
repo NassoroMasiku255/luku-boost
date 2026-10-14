@@ -283,6 +283,34 @@ public class CustomerController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @GetMapping("/loans/last-token")
+    @Operation(
+            summary = "Get last token request by meter number",
+            description = "Retrieves the last successful electricity token response for the specified meter number."
+    )
+    public ResponseEntity<ApiResponse<LoanResponseDto>> getLastToken(@RequestParam String meterNumber) {
+        Loan loan = loanService.getLastLoanByMeterNumber(meterNumber);
+        ElectricityTransaction elecTxn = loanService.getElectricityTransactionByLoanId(loan.getId());
+
+        LoanResponseDto response = LoanResponseDto.builder()
+                .loanRef(loan.getLoanRef())
+                .applicationRef(loan.getApplication().getApplicationRef())
+                .status(loan.getStatus())
+                .principalAmount(loan.getPrincipalAmount())
+                .feeAmount(loan.getFeeAmount())
+                .totalDue(loan.getTotalDue())
+                .outstandingAmount(loan.getOutstandingAmount())
+                .currency(loan.getCurrency())
+                .meterNumber(loan.getMeter().getMeterNumber())
+                .token(elecTxn != null ? elecTxn.getToken() : null)
+                .tokenUnits(elecTxn != null ? elecTxn.getTokenUnits() : null)
+                .issuedAt(loan.getIssuedAt())
+                .dueAt(loan.getDueAt())
+                .build();
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
     private String getClientIp(HttpServletRequest request) {
         String xff = request.getHeader("X-Forwarded-For");
         if (xff != null && !xff.isBlank()) {

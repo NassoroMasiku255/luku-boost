@@ -12,19 +12,18 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface RepaymentRepository extends JpaRepository<Repayment, UUID> {
+public interface RepaymentRepository extends JpaRepository<Repayment, Long> {
 
     Optional<Repayment> findByRepaymentRef(String repaymentRef);
 
     Optional<Repayment> findByIdempotencyKey(String idempotencyKey);
 
-    List<Repayment> findByLoanId(UUID loanId);
+    List<Repayment> findByLoanId(Long loanId);
 
     @Query("SELECT COALESCE(SUM(r.amount), 0) FROM Repayment r WHERE r.loan.id = :loanId AND r.status = 'COMPLETED'")
-    BigDecimal sumCompletedByLoanId(@Param("loanId") UUID loanId);
+    BigDecimal sumCompletedByLoanId(@Param("loanId") Long loanId);
 
     @Query("SELECT r FROM Repayment r WHERE " +
             "(:ref IS NULL OR r.repaymentRef LIKE %:ref%) AND " +

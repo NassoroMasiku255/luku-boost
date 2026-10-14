@@ -14,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
 
             if (jwtService.validateToken(token) && "ACCESS".equals(jwtService.getTokenType(token))) {
-                UUID userId = jwtService.getUserId(token);
+                Long userId = jwtService.getUserId(token);
                 String username = jwtService.getUsername(token);
                 Set<String> permissions = jwtService.getPermissions(token);
 

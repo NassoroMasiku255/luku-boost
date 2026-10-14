@@ -11,17 +11,16 @@ import org.springframework.stereotype.Repository;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface ElectricityTransactionRepository extends JpaRepository<ElectricityTransaction, UUID> {
+public interface ElectricityTransactionRepository extends JpaRepository<ElectricityTransaction, Long> {
 
     Optional<ElectricityTransaction> findByInternalRef(String internalRef);
 
     Optional<ElectricityTransaction> findByIdempotencyKey(String idempotencyKey);
 
     @Query("SELECT et FROM ElectricityTransaction et WHERE et.application.id = :applicationId ORDER BY et.createdAt DESC")
-    Optional<ElectricityTransaction> findByApplicationId(@Param("applicationId") UUID applicationId);
+    Optional<ElectricityTransaction> findByApplicationId(@Param("applicationId") Long applicationId);
 
     List<ElectricityTransaction> findByRequestStatusIn(List<String> statuses);
 

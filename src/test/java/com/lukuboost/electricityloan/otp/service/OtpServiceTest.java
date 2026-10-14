@@ -18,7 +18,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -54,7 +53,7 @@ class OtpServiceTest {
         when(otpRequestRepository.save(any(OtpRequest.class)))
                 .thenAnswer(inv -> {
                     OtpRequest req = inv.getArgument(0);
-                    req.setId(UUID.randomUUID());
+                    req.setId(1L);
                     return req;
                 });
 
@@ -110,7 +109,7 @@ class OtpServiceTest {
                 .attemptsRemaining(5)
                 .expiresAt(Instant.now().minus(1, ChronoUnit.MINUTES))
                 .build();
-        otp.setId(UUID.randomUUID());
+        otp.setId(1L);
 
         when(otpRequestRepository.findByApplicationRefAndStatus("APP-001", "PENDING"))
                 .thenReturn(Optional.of(otp));
@@ -132,7 +131,7 @@ class OtpServiceTest {
                 .attemptsRemaining(0)
                 .expiresAt(Instant.now().plus(5, ChronoUnit.MINUTES))
                 .build();
-        otp.setId(UUID.randomUUID());
+        otp.setId(1L);
 
         when(otpRequestRepository.findByApplicationRefAndStatus("APP-001", "PENDING"))
                 .thenReturn(Optional.of(otp));

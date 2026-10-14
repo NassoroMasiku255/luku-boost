@@ -86,7 +86,7 @@ public class AuditService {
                 .build());
     }
 
-    public Page<AuditLog> searchAuditLogs(UUID userId, String action, String entityType,
+    public Page<AuditLog> searchAuditLogs(Long userId, String action, String entityType,
                                            String entityId, Instant from, Instant to, Pageable pageable) {
         return auditLogRepository.searchAuditLogs(userId, action, entityType, entityId, from, to, pageable);
     }

@@ -54,7 +54,7 @@ public class AdminCustomerController {
     @GetMapping("/{id}")
     @Operation(summary = "Get customer details")
     @PreAuthorize("hasAuthority('CUSTOMER_VIEW')")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getCustomer(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getCustomer(@PathVariable Long id) {
         Customer customer = customerService.getById(id);
         var meters = meterRepository.findByCustomerId(id);
         var loans = loanRepository.findByCustomerId(id);

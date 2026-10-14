@@ -101,7 +101,7 @@ public class AdminApiClientController {
     @Operation(summary = "Update API client settings (not credentials)")
     @PreAuthorize("hasAuthority('CONFIG_UPDATE') or hasAuthority('CONFIG_MANAGE')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> updateClient(
-            @PathVariable UUID id, @RequestBody Map<String, Object> body) {
+            @PathVariable Long id, @RequestBody Map<String, Object> body) {
 
         ApiClient client = apiClientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ApiClient", id.toString()));
@@ -124,7 +124,7 @@ public class AdminApiClientController {
     @PostMapping("/{id}/regenerate-key")
     @Operation(summary = "Regenerate API key for a client")
     @PreAuthorize("hasAuthority('CONFIG_UPDATE') or hasAuthority('CONFIG_MANAGE')")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> regenerateKey(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> regenerateKey(@PathVariable Long id) {
 
         ApiClient client = apiClientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ApiClient", id.toString()));
@@ -147,7 +147,7 @@ public class AdminApiClientController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an API client")
     @PreAuthorize("hasAuthority('CONFIG_UPDATE') or hasAuthority('CONFIG_MANAGE')")
-    public ResponseEntity<ApiResponse<Void>> deleteClient(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> deleteClient(@PathVariable Long id) {
         ApiClient client = apiClientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ApiClient", id.toString()));
 

@@ -11,10 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface OtpRequestRepository extends JpaRepository<OtpRequest, UUID> {
+public interface OtpRequestRepository extends JpaRepository<OtpRequest, Long> {
 
     Optional<OtpRequest> findByApplicationRefAndStatus(String applicationRef, String status);
 

@@ -32,7 +32,7 @@ public class JwtService {
         this.issuer = issuer;
     }
 
-    public String generateAccessToken(UUID userId, String username, Set<String> permissions) {
+    public String generateAccessToken(Long userId, String username, Set<String> permissions) {
         return Jwts.builder()
                 .subject(userId.toString())
                 .issuer(issuer)
@@ -45,7 +45,7 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateRefreshToken(UUID userId) {
+    public String generateRefreshToken(Long userId) {
         return Jwts.builder()
                 .subject(userId.toString())
                 .issuer(issuer)
@@ -75,8 +75,8 @@ public class JwtService {
         }
     }
 
-    public UUID getUserId(String token) {
-        return UUID.fromString(parseToken(token).getSubject());
+    public Long getUserId(String token) {
+        return Long.parseLong(parseToken(token).getSubject());
     }
 
     public String getUsername(String token) {

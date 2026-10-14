@@ -46,7 +46,7 @@ public class EligibilityService {
     @Value("${app.loan.currency:TZS}")
     private String currency;
 
-    public LoanEligibilityResult calculateEligibility(MeterInformation meterInfo, UUID customerId) {
+    public LoanEligibilityResult calculateEligibility(MeterInformation meterInfo, Long customerId) {
         log.info("Calculating eligibility for meter={}, customer={}", meterInfo.getMeterNumber(), customerId);
 
         BigDecimal serviceFee = getServiceFeePercentage();
@@ -75,11 +75,11 @@ public class EligibilityService {
         }
 
         // Check last purchase data
-        if (meterInfo.getLastTokenAmount() == null || meterInfo.getLastTokenAmount().compareTo(BigDecimal.ZERO) <= 0) {
-            return result.eligible(false)
-                    .failureReasons(List.of("No previous electricity purchase found for this meter."))
-                    .build();
-        }
+//        if (meterInfo.getLastTokenAmount() == null || meterInfo.getLastTokenAmount().compareTo(BigDecimal.ZERO) <= 0) {
+//            return result.eligible(false)
+//                    .failureReasons(List.of("No previous electricity purchase found for this meter."))
+//                    .build();
+//        }
 
         // Apply configurable rules
         BigDecimal percentage = defaultPercentage;

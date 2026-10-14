@@ -12,19 +12,18 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface LoanRepository extends JpaRepository<Loan, UUID> {
+public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     @Query("SELECT l FROM Loan l JOIN FETCH l.meter JOIN FETCH l.application WHERE l.loanRef = :loanRef")
     Optional<Loan> findByLoanRefWithMeter(@Param("loanRef") String loanRef);
 
     Optional<Loan> findByLoanRef(String loanRef);
 
-    List<Loan> findByCustomerIdAndStatus(UUID customerId, String status);
+    List<Loan> findByCustomerIdAndStatus(Long customerId, String status);
 
-    long countByCustomerIdAndStatus(UUID customerId, String status);
+    long countByCustomerIdAndStatus(Long customerId, String status);
 
     @Query("SELECT COUNT(l) > 0 FROM Loan l WHERE l.customer.phoneNumber = :phoneNumber AND l.status = 'ACTIVE'")
     boolean existsActiveByPhoneNumber(@Param("phoneNumber") String phoneNumber);
@@ -41,7 +40,7 @@ public interface LoanRepository extends JpaRepository<Loan, UUID> {
     Page<Loan> searchLoans(
             @Param("ref") String ref,
             @Param("status") String status,
-            @Param("customerId") UUID customerId,
+            @Param("customerId") Long customerId,
             @Param("from") Instant from,
             @Param("to") Instant to,
             Pageable pageable);
@@ -66,8 +65,11 @@ public interface LoanRepository extends JpaRepository<Loan, UUID> {
     @Query("SELECT COALESCE(SUM(l.principalAmount), 0) FROM Loan l WHERE l.createdAt >= :from AND l.createdAt < :to")
     BigDecimal sumAmountBetween(@Param("from") Instant from, @Param("to") Instant to);
 
-    @Query("SELECT l FROM Loan l JOIN FETCH l.meter WHERE l.customer.id = :customerId")
-    List<Loan> findByCustomerIdWithMeter(@Param("customerId") UUID customerId);
+    @Query("SELECT l FROM Loan l JOIN FETCH l.meter JOIN FETCH l.application WHERE l.meter.meterNumber = :meterNumber ORDER BY l.createdAt DESC")
+    List<Loan> findLatestByMeterNumber(@Param("meterNumber") String meterNumber, Pageable pageable);
 
-    List<Loan> findByCustomerId(UUID customerId);
+    @Query("SELECT l FROM Loan l JOIN FETCH l.meter WHERE l.customer.id = :customerId")
+    List<Loan> findByCustomerIdWithMeter(@Param("customerId") Long customerId);
+
+    List<Loan> findByCustomerId(Long customerId);
 }

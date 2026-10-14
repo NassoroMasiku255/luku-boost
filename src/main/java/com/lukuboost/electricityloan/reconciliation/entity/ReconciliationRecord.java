@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "reconciliation_records")
@@ -21,8 +20,8 @@ import java.util.UUID;
 public class ReconciliationRecord {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "recon_ref", nullable = false, unique = true, length = 40)
     private String reconRef;
@@ -56,7 +55,7 @@ public class ReconciliationRecord {
     private String resolutionNotes;
 
     @Column(name = "resolved_by")
-    private UUID resolvedBy;
+    private Long resolvedBy;
 
     @Column(name = "resolved_at")
     private Instant resolvedAt;

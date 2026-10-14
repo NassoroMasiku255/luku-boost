@@ -56,7 +56,7 @@ public class CustomerService {
         return customerRepository.searchCustomers(phone, status, name, pageable);
     }
 
-    public Customer getById(UUID id) {
+    public Customer getById(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(() -> new com.lukuboost.electricityloan.common.exception.ResourceNotFoundException("Customer", id.toString()));
     }

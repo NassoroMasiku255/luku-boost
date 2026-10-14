@@ -6,10 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface SystemConfigurationRepository extends JpaRepository<SystemConfiguration, UUID> {
+public interface SystemConfigurationRepository extends JpaRepository<SystemConfiguration, Long> {
 
     Optional<SystemConfiguration> findByConfigKey(String configKey);
 
