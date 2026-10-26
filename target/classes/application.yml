@@ -26,7 +26,7 @@ spring:
           time_zone: ${SPRING_JPA_HIBERNATE_JDBC_TIME_ZONE:UTC}
 
   flyway:
-    enabled: ${SPRING_FLYWAY_ENABLED:false}
+    enabled: ${SPRING_FLYWAY_ENABLED:true}
 
   data:
     redis:
