@@ -16,7 +16,6 @@ import java.time.Instant;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoanResponseDto {
 
-    private Long id;
     private String loanRef;
     private String applicationRef;
     private String status;
@@ -30,6 +29,5 @@ public class LoanResponseDto {
     private String tokenUnits;
     private Instant issuedAt;
     private Instant dueAt;
-    private Instant completedAt;
     private String message;
 }
