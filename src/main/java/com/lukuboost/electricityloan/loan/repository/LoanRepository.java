@@ -31,12 +31,12 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     @Query("SELECT COUNT(l) > 0 FROM Loan l WHERE l.meter.meterNumber = :meterNumber AND l.status = 'ACTIVE'")
     boolean existsActiveByMeterNumber(@Param("meterNumber") String meterNumber);
 
-    @Query("SELECT la FROM Loan la WHERE " +
-            "(:ref IS NULL OR la.loanRef LIKE %:ref%) AND " +
-            "(:status IS NULL OR la.status = :status) AND " +
-            "(:customerId IS NULL OR la.customer.id = :customerId) AND " +
-            "(:from IS NULL OR la.createdAt >= :from) AND " +
-            "(:to IS NULL OR la.createdAt <= :to)")
+    @Query("SELECT l FROM Loan l JOIN FETCH l.meter LEFT JOIN FETCH l.application WHERE " +
+            "(:ref IS NULL OR l.loanRef LIKE %:ref%) AND " +
+            "(:status IS NULL OR l.status = :status) AND " +
+            "(:customerId IS NULL OR l.customer.id = :customerId) AND " +
+            "(:from IS NULL OR l.createdAt >= :from) AND " +
+            "(:to IS NULL OR l.createdAt <= :to)")
     Page<Loan> searchLoans(
             @Param("ref") String ref,
             @Param("status") String status,
