@@ -1,6 +1,0 @@
-com/lukuboost/electricityloan/otp/service/OtpServiceTest.class
-com/lukuboost/electricityloan/loan/service/LoanStateMachineTest.class
-com/lukuboost/electricityloan/common/security/JwtServiceTest.class
-com/lukuboost/electricityloan/common/utility/ReferenceGeneratorTest.class
-com/lukuboost/electricityloan/eligibility/service/EligibilityServiceTest.class
-com/lukuboost/electricityloan/loan/service/LoanServiceTest.class
