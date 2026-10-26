@@ -121,6 +121,7 @@ public class AdminLoanController {
 
     private LoanResponseDto toDto(Loan loan) {
         return LoanResponseDto.builder()
+                .id(loan.getId())
                 .loanRef(loan.getLoanRef())
                 .applicationRef(loan.getApplication() != null ? loan.getApplication().getApplicationRef() : null)
                 .status(loan.getStatus())
