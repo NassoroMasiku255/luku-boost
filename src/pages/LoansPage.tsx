@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../lib/api";
 import { Card, CardHeader, CardContent } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../components/ui/table";
-import { Search } from "lucide-react";
+import { Search, CheckCircle } from "lucide-react";
 
 function statusVariant(status: string) {
   switch (status) {
@@ -29,6 +29,7 @@ export function LoansPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(0);
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-loans", search, status, page],
@@ -36,6 +37,13 @@ export function LoansPage() {
       api
         .get("/admin/loans", { params: { ref: search || undefined, status: status || undefined, page, size: 20 } })
         .then((r) => r.data.data),
+  });
+
+  const completeLoanMutation = useMutation({
+    mutationFn: (loanId: number) => api.patch(`/admin/loans/${loanId}/complete`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-loans"] });
+    },
   });
 
   return (
@@ -84,6 +92,7 @@ export function LoansPage() {
                     <TableHead>Principal</TableHead>
                     <TableHead>Outstanding</TableHead>
                     <TableHead>Due Date</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -97,11 +106,24 @@ export function LoansPage() {
                       <TableCell>TZS {(loan.principalAmount as number)?.toLocaleString()}</TableCell>
                       <TableCell>TZS {(loan.outstandingAmount as number)?.toLocaleString()}</TableCell>
                       <TableCell>{loan.dueAt ? new Date(loan.dueAt as string).toLocaleDateString() : "-"}</TableCell>
+                      <TableCell>
+                        {loan.status !== "COMPLETED" && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => completeLoanMutation.mutate(loan.id as number)}
+                            disabled={completeLoanMutation.isPending}
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Complete
+                          </Button>
+                        )}
+                      </TableCell>
                     </TableRow>
                   ))}
                   {(!data?.content || data.content.length === 0) && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                      <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                         No loans found
                       </TableCell>
                     </TableRow>
